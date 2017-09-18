@@ -7,8 +7,6 @@ using namespace std;
 long long int perm[101][101][101], sum[101][101][101];
 
 int main(){
-	perm[0][0][0] = 1; 
-	sum[0][0][0] = 0;
 	for(int p = 0; p <= 100; p++){
 		for(int q = 0; q <= 100; q++){
 			for(int r = 0; r <= 100; r++){
