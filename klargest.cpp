@@ -4,46 +4,47 @@
 
 using namespace std;
 
-int find_mid(int A[], int l, int r){
-	sort(A + l, A +  r + 1);
-	return A[(l + r) >> 1];
+int mid(int A[], int l, int r){
+	sort(A + l, A + r + 1);
+	return A[(l + r) >> 1]
 }
 
-int partition(int A[], int n, int x){
-	int j = -1, idx;
-	for(int i = 0; i < n; i++){
-		if(A[i] < x){
+int partition(int A[], int n){
+	int x = A[n - 1], j = -1;
+	for(int i = 0; i < n - 1; i++){
+		if(A[i] <= x){
 			j++;
-			swap(A[i], A[j]);
-		}
-		else if(A[i] == x){
-			j++;
-			swap(A[i], A[j]);
-			idx = j;
+			swap(A[j], A[i]);
 		}
 	}
-	swap(A[idx], A[j]);
+	j++;
+	swap(A[j], A[n - 1]);
 	return j;
 }
 
-int select(int A[], int n, int k){
+int klargest(int A[], int n, int k){
 	int mom;
 	if(n > 1){
-		int m = ceil(n/5.0), B[m];
-		for(int i = 0; i < n; i += 5) B[i/5] = find_mid(A, i, i + 4 < n ? i + 4 : n - 1);
-		mom = select(B, m, ceil(m / 2.0));
+		int m = ceil(n / 5), B[m];
+		for(int i = 0; i < n; i += 5){
+			B[i/5] = mid(A, i, i + 4 < n ? i + 4 : n - 1);
+		}
+		mom = klargest(B, m, ceil(m / 2.0));
 	}
 	else return A[0];
-	int m = partition(A, n, mom) + 1, B[max(m, n - m)];
-	if(k < m){
-		for(int i = 0; i < m - 1; i++) B[i] = A[i];
-		return select(B, m - 1, k);
+	int j = 0;
+	for(; j < n; j++) if(A[j] == mom) break;
+	swap(A[j], A[n - 1]);
+	j = partition(A, n) + 1;
+	int C[max(j, n - j)];
+	if(j > k){
+		for(int i = 0; i < j - 1; i++) C[i] = A[i];
+		return klarget(C, j - 1, k);
 	}
-	else if(k == m) return mom;
+	else if(j == k) return mom;
 	else{
-		k -= m;
-		for(int i = m; i < n; i++) B[i - m] = A[i];
-		return select(B, n - m, k);
+		for(int i = j; i < n; i++) C[i - j] = A[i];
+		return klargest(C, n - j, k - j);
 	}
 }
 
